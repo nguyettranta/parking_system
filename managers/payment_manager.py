@@ -26,11 +26,12 @@ class PaymentManager(BaseFileManager):
     def get_remaining_credit(self, car_identity):
         """Get remaining credit for a car"""
         history_file = self.get_file_path(f"{car_identity}_history.txt")
-        
         last_line = None
-        with open(history_file, 'r') as file:
-            for line in file:
-                last_line = line
+        
+        if os.path.exists(history_file):
+            with open(history_file, 'r') as file:
+                for line in file:
+                    last_line = line
 
         if last_line:
             parts = last_line.strip().split(",")

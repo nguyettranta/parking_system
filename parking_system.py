@@ -125,8 +125,8 @@ class ParkingSystem:
 
         credit = result
         self.file_manager.save_payment(car_identity, price, record, leave_time, credit)
-        current_credit = self.payment_manager.get_credit(car_identity)
-        print(f"Payment accepted. Remaining credit: ${current_credit.quantize(Decimal('0.01'))}")
+        current_credit = self.payment_manager.get_remaining_credit(car_identity)
+        print(f"Payment accepted. Remaining credit: ${current_credit}")
         
         del self.records[car_identity]
         self.file_manager.remove_record_file(car_identity)
