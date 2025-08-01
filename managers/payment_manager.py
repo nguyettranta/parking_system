@@ -10,10 +10,12 @@ class PaymentManager(BaseFileManager):
     
     def process_payment(self, car_identity, price, payment_amount):
         """Process payment and update credits"""
-        if payment_amount < price:
+        remaining_credit = self.get_remaining_credit(car_identity)
+        if (payment_amount + remaining_credit) < price:
             return False, "Payment insufficient."
         
-        credit = payment_amount - price
+        
+        credit = payment_amount + remaining_credit - price
         self.credits[car_identity] = self.credits.get(car_identity, Decimal("0.0")) + credit
         return True, credit
     
@@ -39,4 +41,4 @@ class PaymentManager(BaseFileManager):
                 except:
                     return Decimal("0.0")
 
-        return self.get_credit(car_identity)
+        return Decimal("0.0")

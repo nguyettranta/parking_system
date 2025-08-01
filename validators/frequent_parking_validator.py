@@ -16,6 +16,5 @@ class FrequentParkingValidator:
             return False
         elif calculated_check_digit == 11:
             calculated_check_digit = 0
-        print(f"Body: {body}, Check Digit: {check_digit}, Total: {total}, Remainder: {remainder}, Calculated Check Digit: {calculated_check_digit}")
 
         return check_digit == calculated_check_digit

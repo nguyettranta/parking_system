@@ -75,10 +75,12 @@ class ParkingSystem:
             car_identity = input("Enter car identity to pickup: ").strip()
             # Format car identity to uppercase for consistency
             car_identity = self.car_validator.format_car_identity(car_identity)
-            print(f"Checking records for car identity: {self.records}")
             # Validate car identity format
             if self.car_validator.validate(car_identity):
                 if car_identity in self.records:
+                    break
+                elif self.file_manager.get_car_record(car_identity):
+                    self.records[car_identity] = self.file_manager.get_car_record(car_identity)
                     break
                 else:
                     print("Car identity not found. Try again...")
@@ -87,7 +89,6 @@ class ParkingSystem:
                 print("Try again...")
 
         record = self.records[car_identity]
-        print(f"Car {car_identity} found. Arrival time: {record}")
 
         while True:
             leave_time_str = input("Enter leave time (YYYY-MM-DD HH:MM): ").strip()
@@ -117,35 +118,30 @@ class ParkingSystem:
                 print("Invalid payment.")
 
             success, result = self.payment_manager.process_payment(car_identity, price, payment_amount)
-            if not success:
+            if success:
+                break
+            else:
                 print(result)
-                return
 
-            credit = result
-            self.file_manager.save_payment(car_identity, price, record, leave_time, credit)
-            current_credit = self.payment_manager.get_credit(car_identity)
-            print(f"Payment accepted. Remaining credit: ${current_credit.quantize(Decimal('0.01'))}")
-            
-            del self.records[car_identity]
-            self.file_manager.remove_record_file(car_identity)
+        credit = result
+        self.file_manager.save_payment(car_identity, price, record, leave_time, credit)
+        current_credit = self.payment_manager.get_credit(car_identity)
+        print(f"Payment accepted. Remaining credit: ${current_credit.quantize(Decimal('0.01'))}")
+        
+        del self.records[car_identity]
+        self.file_manager.remove_record_file(car_identity)
 
     def history(self):
         """Handle history generation"""
-        car_identity = input("Enter car identity for history: ").strip()
-        
-        # Validate car identity format
-        if not self.car_validator.validate(car_identity):
-            print("Invalid car identity format. Please use format like: 59C-12345 or 01E-00001")
-            return
-        
         while True:
             car_identity = input("Enter car identity for history: ").strip()
             # Format car identity to uppercase for consistency
             car_identity = self.car_validator.format_car_identity(car_identity)
-            print(f"Checking records for car identity: {self.records}")
             # Validate car identity format
             if self.car_validator.validate(car_identity):
                 if car_identity in self.records:
+                    break
+                elif self.history_manager.is_history_file_exist(car_identity):
                     break
                 else:
                     print("Car identity not found. Try again...")

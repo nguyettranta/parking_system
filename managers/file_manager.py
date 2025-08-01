@@ -20,9 +20,17 @@ class FileManager(BaseFileManager):
     def save_payment(self, car_identity, amount, record, leave_time, credit):
         """Save payment history to file"""
         file_path = self.get_file_path(f"{car_identity}_history.txt")
-        print(f"{record.arrival_time} - {leave_time}, Paid: {amount}, Credit: {credit}\n")
         with open(file_path, "a") as f:
             f.write(f"{record.arrival_time} - {leave_time}, Paid: {amount}, Credit: {credit}\n")
+
+    def get_car_record(self, car_identity):
+        """Get parking record for a car"""
+        file_path = self.get_file_path(f"{car_identity}_record.txt")
+        if os.path.exists(file_path):
+            with open(file_path, "r") as f:
+                content = f.read().strip()
+                return ParkingRecord.from_string(content)
+        return None
     
     def load_existing_records(self):
         """Load all existing parking records from files"""

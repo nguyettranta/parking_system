@@ -24,12 +24,10 @@ class PriceCalculator:
         arrival_time = record.arrival_time
 
         while arrival_time < leave_time:
-            week_day = arrival_time.weekday()  # Monday=0 ... Sunday=6
+            week_day = arrival_time.weekday()
             hour = arrival_time.hour
             slot = self.get_time_slot(hour)
-            print(f"Calculating for week day: {week_day}, hour: {hour}, slot: {slot}")
             slot_info = self.pricing[week_day].get(slot)
-            print(f"Calculating for slot: {slot}, arrival time: {arrival_time}, week day: {week_day}, hour: {hour}, slot info: {slot_info}")
 
             rate = slot_info["rate"]
             if "onetime" in slot_info:

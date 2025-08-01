@@ -35,7 +35,7 @@ class HistoryManager(BaseFileManager):
                         except:
                             continue
 
-            credit = self.payment_manager.get_credit(car_identity)
+            credit = self.payment_manager.get_remaining_credit(car_identity)
             export_file = self.get_file_path(f"{car_identity}.txt")
             
             with open(export_file, "w") as f:
@@ -48,3 +48,11 @@ class HistoryManager(BaseFileManager):
             return True, f"History exported to {export_file}"
         except Exception as e:
             return False, f"Error generating history: {e}"
+        
+    def is_history_file_exist(self, car_identity):
+        """Check if history file exists"""
+        file_path = self.get_file_path(f"{car_identity}_history.txt")
+        if os.path.exists(file_path):
+            return True
+        else:
+            return False

@@ -1,0 +1,1 @@
+At the root folder run "python3 parking_system.py"py
